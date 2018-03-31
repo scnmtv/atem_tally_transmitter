@@ -5,7 +5,6 @@
 
 */
 
-
 #include <SPI.h>
 #include "nRF24L01.h"
 #include "RF24.h"
@@ -15,7 +14,7 @@
 RF24 radio(49, 53);
 
 // Topology
-const uint64_t pipes[2] = { 0xABCDABCD71LL, 0x544d52687CLL };              // Radio pipe addresses for the 2 nodes to communicate.
+const uint64_t pipes[2] = { 0xABCDABFF51LL, 0x544d52687CAA };              // Radio pipe addresses for the 2 nodes to communicate.
 
 // start transmitting
 bool stat = true;
@@ -37,14 +36,20 @@ void setup() {
   radio.openReadingPipe(1, pipes[1]);
   radio.startListening();                 // Start listening
   radio.printDetails();                   // Dump the configuration of the rf unit for debugging
+
+  // starting...
+  Serial.println("starting transmitter...");
+  delay(3000);
+  Serial.print("DONE!");
 }
 
 void loop(void) {
 
   sendData(B00000110);
+  Serial.println("sending...");
 
   // Try again later
-  delay(50);
+  delay(20);
 }
 
 void sendData(int stevilo) {
@@ -52,25 +57,25 @@ void sendData(int stevilo) {
   radio.stopListening();                                  // First, stop listening so we can talk.
 
   //printf("Now sending %d as payload... \n\r", stevilo);
-  byte gotByte;
+  //byte gotByte;
   //unsigned long time = micros();                          // Take the time, and send it.  This will block until complete
   //Called when STANDBY-I mode is engaged (User is finished sending)
   if (!radio.write( &stevilo, 1 )) {
     Serial.println(F("failed."));
   } else {
-    
+
     // ce imamo ACK!
     /*
-    if (!radio.available()) {
+      if (!radio.available()) {
       Serial.println(F("Blank Payload Received."));
-    } else {
+      } else {
       while (radio.available() ) {
         unsigned long tim = micros();
         radio.read( &gotByte, 1 );
         printf("Got response %d, round-trip delay: %lu microseconds\n\r", gotByte, tim - time);
         //counter++;
       }
-    }
+      }
     */
   }
 }
