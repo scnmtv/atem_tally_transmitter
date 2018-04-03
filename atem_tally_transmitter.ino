@@ -1,6 +1,11 @@
 /*
   custom nrf24L01 atem tally transmitter module with arduino-mega
 
+  IMPORTANT: library used - https://github.com/nRF24/RF24
+
+  - test example only (integrate into production sketch)
+  - adjust radio.setChannel(CH) between 0-125 (2.400MHz - 2.525MHz)
+  
   29.3.2018 - Ferbi
 
 */
